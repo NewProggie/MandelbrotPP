@@ -48,11 +48,11 @@ class CheckHandler {
 // written to it.
 #ifndef NDEBUG
 #define CHECK(b)                                                         \
-    (b ? ::mpp::internal::GetNullLogInstance()                           \
+    (b ? ::mpp::internal::GetNullLoggingInstance()                       \
        : ::mpp::internal::CheckHandler(#b, __FILE__, __func__, __LINE__) \
              .GetLog())
 #else
-#define CHECK(b) ::mpp::internal::GetNullLogInstance()
+#define CHECK(b) ::mpp::internal::GetNullLoggingInstance()
 #endif
 
 #define CHECK_EQ(a, b) CHECK((a) == (b))

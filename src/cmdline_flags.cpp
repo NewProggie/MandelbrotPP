@@ -8,9 +8,9 @@
 #include <cstring>
 #include <iostream>
 #include <limits>
-#include <cassert>
 #include <tuple>
 
+#include "check.h"
 #include "string_util.h"
 
 namespace mpp {
@@ -129,10 +129,9 @@ bool ParseIntPairFlag(const char *str, const char *flag, int_pair *value) {
     if (value_str == nullptr)
         return false;
 
-    // split value_str from '123 456' to '123' and '456'
+    // split value_str from '1200x800' to '1200' and '800'
     auto values = SplitString(value_str, 'x');
-    assert(values.size() == 2 &&
-           "Expected image dimensions in the form of <width>x<height>");
+    CHECK_EQ(values.size(), 2);
 
     return (ParseInt32(std::string("The value of flag lhs --") + flag,
                        values[0].c_str(), &std::get<0>(*value)) &&

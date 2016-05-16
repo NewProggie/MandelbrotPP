@@ -6,6 +6,7 @@
 #define MANDELBROTPP_MANDELBROTPP_H
 
 #include "macros.h"
+#include "mandelbrotpp_api.h"
 #include "exporter.h"
 
 #endif // MANDELBROTPP_MANDELBROTPP_H
