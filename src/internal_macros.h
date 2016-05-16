@@ -5,6 +5,7 @@
 // determine host os system
 #if defined(_WIN32)
 # define MANDELBROTPP_OS_WINDOWS 1
+# define __func__ __FUNCTION__
 #elif defined(__APPLE__)
 # define MANDELBROTPP_OS_MACOSX 1
 #elif defined(__FreeBSD__)
