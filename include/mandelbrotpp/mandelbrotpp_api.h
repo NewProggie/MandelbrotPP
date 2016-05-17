@@ -29,9 +29,11 @@ class MandelbrotPPPixel {
     MandelbrotPPPixel(Coord coord, int32_t xdim,
                       int32_t ydim, int32_t max_iterations)
         : max_iterations_(max_iterations), iter_(0),
-          c_(coord.x, coord.y) {
+          c_(static_cast<float>(coord.x), static_cast<float>(coord.y)) {
         c_ *= static_cast<T>(2.0) / static_cast<T>(ydim);
-        c_ -= std::complex<T>(static_cast<T>(1.0) * xdim / ydim + 0.5, 1.0);
+        c_ -= std::complex<T>(static_cast<T>(1) * xdim / ydim +
+                                  static_cast<T>(0.5),
+                              static_cast<T>(1));
     }
 
     int32_t iterations() const {
