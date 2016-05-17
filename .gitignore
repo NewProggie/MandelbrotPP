@@ -1,8 +1,11 @@
 # IDE
 .idea/
 
-# Generated folders
+# Output directories
+lib/
 bin/
+!bin/mandelbrot.png
+
 
 # Compiled Object files
 *.slo
