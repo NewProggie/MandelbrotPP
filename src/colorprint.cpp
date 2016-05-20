@@ -10,7 +10,7 @@
 #include "cmdline_flags.h"
 #include "internal_macros.h"
 
-#ifdef MANDELBROTPP_OS_WINDOWS
+#if IS_DEFINED(MANDELBROTPP_OS_WINDOWS)
 #include <Windows.h>
 #endif
 
@@ -18,14 +18,14 @@ DECLARE_bool(color_print);
 
 namespace mpp {
 namespace {
-#ifdef MANDELBROTPP_OS_WINDOWS
+#if IS_DEFINED(MANDELBROTPP_OS_WINDOWS)
 typedef WORD PlatformColorCode;
 #else
 typedef const char *PlatformColorCode;
 #endif
 
 PlatformColorCode GetPlatformColorCode(LogColor color) {
-#ifdef MANDELBROTPP_OS_WINDOWS
+#if IS_DEFINED(MANDELBROTPP_OS_WINDOWS)
     switch (color) {
         case COLOR_RED: return FOREGROUND_RED;
         case COLOR_GREEN: return FOREGROUND_GREEN;
@@ -61,7 +61,7 @@ void ColorPrint(LogColor color, const char *format, ...) {
         return;
     }
 
-#ifdef MANDELBROTPP_OS_WINDOWS
+#if IS_DEFINED(MANDELBROTPP_OS_WINDOWS)
     auto stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
     // Get the current text color
