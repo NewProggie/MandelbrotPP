@@ -9,3 +9,5 @@ unset(CMAKE_CXX_FLAGS)
 # GoogleTest for unit testing
 add_subdirectory(googletest-1.7.0)
 
+# libpng for png export
+add_subdirectory(libpng-1.6.23)
