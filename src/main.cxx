@@ -13,9 +13,9 @@ DEFINE_int32(mandelbrotpp_iterations, 30,
 DEFINE_int_pair(mandelbrotpp_image_dimensions, 640, 480,
                 "The default image dimension for the Mandelbrot image");
 
-DEFINE_string(mandelbrotpp_image_type, "ppm",
+DEFINE_string(mandelbrotpp_image_type, "png",
               "The image format to use for creating a Mandelbrot image. Valid "
-              "values are 'ppm' or 'pgm'");
+              "values are 'png', 'ppm' or 'pgm'");
 
 namespace mpp {
 namespace internal {
@@ -25,7 +25,7 @@ void PrintUsageAndExit() {
             "mandelbrotpp"
             " [--mandelbrotpp_iterations=<num_iterations>]\n"
             "             [--mandelbrotpp_image_dimensions=<width>x<height>]\n"
-            "             [--mandelbrotpp_image_type=<ppm|bpm|pgm>]\n");
+            "             [--mandelbrotpp_image_type=<png|ppm|pgm>]\n");
     std::exit(0);
 }
 
@@ -48,8 +48,8 @@ void ParseCmdLineFlags(int argc, char *argv[]) {
         }
     }
 
-    if (FLAGS_mandelbrotpp_image_type != "ppm" &&
-        FLAGS_mandelbrotpp_image_type != "bmp" &&
+    if (FLAGS_mandelbrotpp_image_type != "png" &&
+        FLAGS_mandelbrotpp_image_type != "ppm" &&
         FLAGS_mandelbrotpp_image_type != "pgm") {
         PrintUsageAndExit();
     }
@@ -59,7 +59,9 @@ void ParseCmdLineFlags(int argc, char *argv[]) {
 
 std::unique_ptr<MandelbrotPPExporter> GetDefaultExporter() {
     typedef std::unique_ptr<MandelbrotPPExporter> PtrType;
-    if (FLAGS_mandelbrotpp_image_type == "ppm") {
+    if (FLAGS_mandelbrotpp_image_type == "png") {
+        return PtrType(new PNGExporter);
+    } else if (FLAGS_mandelbrotpp_image_type == "ppm") {
         return PtrType(new PPMExporter);
     } else if (FLAGS_mandelbrotpp_image_type == "pgm") {
         return PtrType(new PGMExporter);

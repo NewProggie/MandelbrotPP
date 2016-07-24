@@ -1,5 +1,6 @@
 # IDE
 .idea/
+build/
 
 # Output directories
 lib/

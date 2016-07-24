@@ -40,8 +40,13 @@ class MandelbrotPPExporter {
     virtual ~MandelbrotPPExporter() = default;
 };
 
-// Simple reporter that outputs the mandelbrot image in the ppm format.
+// Simple reporter that outputs the mandelbrot image in the png format.
 // This is the default export format used.
+class PNGExporter : public MandelbrotPPExporter {
+  public:
+    void WriteImage(const Image &image) override;
+};
+
 class PPMExporter : public MandelbrotPPExporter {
   public:
     void WriteImage(const Image &image) override;
