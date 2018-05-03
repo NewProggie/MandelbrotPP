@@ -2,6 +2,8 @@
 # Use of this source code is governed by a MIT license that can be found in
 # the LICENSE file.
 
+find_package(OpenMP REQUIRED)
+
 add_library(mpp_lib STATIC
   check.h
   cmdline_flags.cpp
@@ -35,4 +37,14 @@ include(GenerateExportHeader)
 generate_export_header(mpp_lib)
 
 add_executable(mpp main.cpp)
-target_link_libraries(mpp PRIVATE mpp::lib )#benchmark)
+target_link_libraries(mpp PRIVATE mpp::lib)
+
+if(BUILD_BENCHMARK)
+  add_executable(mandel_basic mpp_perf.cpp mandel_basic.cpp)
+  target_link_libraries(mandel_basic PRIVATE mpp::lib)
+  add_test(NAME mandel_basic COMMAND mandel_basic)
+
+  add_executable(mandel_sse2 mpp_perf.cpp mandel_sse2.cpp)
+  target_link_libraries(mandel_sse2 PRIVATE mpp::lib OpenMP::OpenMP_CXX)
+  add_test(NAME mandel_sse2 COMMAND mandel_basic)
+endif()

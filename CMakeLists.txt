@@ -31,12 +31,13 @@ endif()
 
 # Setup a few default arguments and options for the following projects
 option(BUILD_TESTING "Build with tests" OFF)
-option(BUILD_BENCHMARK "Build with performance tests" OFF)
+option(BUILD_BENCHMARK "Build with performance tests" ON)
 option(BUILD_DOCUMENTATION "Build with documentation" OFF)
 
 # Setup project defaults
 include(InstallLocation)
 include(ExternalProject)
 include(Projects)
+enable_testing()
 
 add_subdirectory(src)
