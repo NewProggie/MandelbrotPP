@@ -1,4 +1,4 @@
-// Copyright (c) 2016, Kai Wolf. All rights reserved.
+// Copyright (c) 2016 - 2018, Kai Wolf. All rights reserved.
 // Use of this source code is governed by a personal license file that can be
 // found in the LICENSE file in the top directory.
 

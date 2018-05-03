@@ -1,9 +1,9 @@
-// Copyright (c) 2016, Kai Wolf. All rights reserved.
+// Copyright (c) 2016 - 2018, Kai Wolf. All rights reserved.
 // Use of this source code is governed by a MIT license that can be found in
 // the LICENSE file.
 
 #include "logging.h"
-
+#include "mpp_lib_export.h"
 #include <iostream>
 
 namespace mpp {
@@ -22,7 +22,7 @@ int GetLoggingLevel() {
     return LoggingLevelImpl();
 }
 
-class NullLoggingBuffer : public std::streambuf {
+class MPP_LIB_EXPORT NullLoggingBuffer : public std::streambuf {
   public:
     int overflow(int c) {
         return c;
