@@ -40,4 +40,5 @@ before_script:
 
 script:
   - cmake --build . --config Debug --clean-first
+  - export LD_LIBRARY_PATH=$(if [[ $CXX == "clang++" ]]; then echo -n '/usr/local/clang/lib'; fi)
   - ./bin/mpp && echo $?
