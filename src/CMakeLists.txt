@@ -2,7 +2,7 @@
 # Use of this source code is governed by a MIT license that can be found in
 # the LICENSE file.
 
-find_package(OpenMP REQUIRED)
+find_package(OpenMP)
 
 cmake_host_system_information(RESULT SSE2_FOUND QUERY HAS_SSE2)
 
@@ -28,18 +28,19 @@ add_library(mpp::lib ALIAS mpp_lib)
 
 target_compile_features(mpp_lib PUBLIC cxx_std_14)
 target_compile_options(mpp_lib PUBLIC -mavx)
-target_compile_definitions(mpp_lib 
-  INTERFACE 
+target_compile_definitions(mpp_lib
+  PUBLIC
     $<$<BOOL:${PNG_FOUND}>:HAS_PNG> $<$<BOOL:${SSE2_FOUND}>:SSE2_FOUND>)
 target_link_libraries(mpp_lib
-  PUBLIC 
-    $<$<BOOL:${PNG_FOUND}>:PNG::PNG> OpenMP::OpenMP_CXX)
+  PUBLIC
+    $<$<BOOL:${PNG_FOUND}>:PNG::PNG>
+    $<$<BOOL:${OpenMP_FOUND}>:OpenMP::OpenMP_CXX>)
 
 # Expose public/private API
 target_include_directories(mpp_lib
-  PRIVATE 
+  PRIVATE
     ${MandelbrotPP_SOURCE_DIR}/src
-  PUBLIC 
+  PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${MandelbrotPP_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
@@ -51,7 +52,7 @@ add_executable(mpp main.cpp)
 target_link_libraries(mpp PRIVATE mpp::lib)
 
 if(BUILD_BENCHMARK)
-  set(PERF_SOURCES 
+  set(PERF_SOURCES
     benchmark.h
     mpp_perf.cpp)
 

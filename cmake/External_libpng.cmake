@@ -2,6 +2,8 @@
 # Use of this source code is governed by a MIT license that can be found in
 # the LICENSE file.
 
+find_package(ZLIB REQUIRED)
+
 ExternalProject_Add(PNG
   URL ${libpng_path}
   URL_MD5 ${libpng_md5}
@@ -9,6 +11,7 @@ ExternalProject_Add(PNG
   CMAKE_ARGS
     -Wno-dev
     -DBUILD_SHARED_LIBS=OFF
+    -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     -DPNG_SHARED=OFF
     -DPNG_STATIC=ON)
 
@@ -26,4 +29,5 @@ add_library(PNG::PNG STATIC IMPORTED)
 add_dependencies(PNG::PNG PNG)
 set_target_properties(PNG::PNG PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES ${PNG_INCLUDE_DIRS}
+  INTERFACE_LINK_LIBRARIES ${ZLIB_LIBRARIES}
   IMPORTED_LOCATION ${PNG_LIBRARIES})

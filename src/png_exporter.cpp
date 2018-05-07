@@ -11,7 +11,7 @@
 
 namespace mpp {
 
-void PNGExporter::WriteImage(const Image &image) {
+void PNGExporter::WriteImage(const MandelbrotPPExporter::Image &image) {
 
     std::FILE *fp = std::fopen("out.png", "wb");
     CHECK(fp != nullptr) << "Could not open file to write png";
