@@ -4,15 +4,21 @@
 
 find_package(OpenMP REQUIRED)
 
+cmake_host_system_information(RESULT SSE2_FOUND QUERY HAS_SSE2)
+
 add_library(mpp_lib STATIC
   check.h
   cmdline_flags.cpp
   cmdline_flags.h
+  cpu.h
+  cpu.cpp
   exporter.cpp
   internal_macros.h
   logging.cpp
   logging.h
   mandel_basic.cpp
+  $<$<BOOL:${SSE2_FOUND}>:mandel_sse2.cpp>
+  mandel_avx.cpp
   pgm_exporter.cpp
   $<$<BOOL:${PNG_FOUND}>:png_exporter.cpp>
   ppm_exporter.cpp
@@ -21,15 +27,20 @@ add_library(mpp_lib STATIC
 add_library(mpp::lib ALIAS mpp_lib)
 
 target_compile_features(mpp_lib PUBLIC cxx_std_14)
-target_compile_definitions(mpp_lib INTERFACE $<$<BOOL:${PNG_FOUND}>:HAS_PNG>)
-target_link_libraries(mpp_lib PUBLIC $<$<BOOL:${PNG_FOUND}>:PNG::PNG>)
+target_compile_options(mpp_lib PUBLIC -mavx)
+target_compile_definitions(mpp_lib 
+  INTERFACE 
+    $<$<BOOL:${PNG_FOUND}>:HAS_PNG> $<$<BOOL:${SSE2_FOUND}>:SSE2_FOUND>)
+target_link_libraries(mpp_lib
+  PUBLIC 
+    $<$<BOOL:${PNG_FOUND}>:PNG::PNG> OpenMP::OpenMP_CXX)
 
 # Expose public/private API
 target_include_directories(mpp_lib
   PRIVATE 
-    ${CMAKE_CURRENT_BINARY_DIR}
     ${MandelbrotPP_SOURCE_DIR}/src
   PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${MandelbrotPP_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
@@ -40,11 +51,11 @@ add_executable(mpp main.cpp)
 target_link_libraries(mpp PRIVATE mpp::lib)
 
 if(BUILD_BENCHMARK)
-  add_executable(mandel_basic mpp_perf.cpp mandel_basic.cpp)
-  target_link_libraries(mandel_basic PRIVATE mpp::lib)
-  add_test(NAME mandel_basic COMMAND mandel_basic)
+  set(PERF_SOURCES 
+    benchmark.h
+    mpp_perf.cpp)
 
-  add_executable(mandel_sse2 mpp_perf.cpp mandel_sse2.cpp)
-  target_link_libraries(mandel_sse2 PRIVATE mpp::lib OpenMP::OpenMP_CXX)
-  add_test(NAME mandel_sse2 COMMAND mandel_basic)
+  add_executable(mpp_perf ${PERF_SOURCES})
+  target_compile_features(mpp_perf PRIVATE cxx_std_14)
+  target_link_libraries(mpp_perf PRIVATE mpp::lib)
 endif()

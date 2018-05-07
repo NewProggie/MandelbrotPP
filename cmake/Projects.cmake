@@ -24,12 +24,6 @@ set(libpng_md5 "b2cc4bddf1d35305606063a19bff3bcb")
 option(USE_SYSTEM_BENCHMARK "Use installed version of Google benchmark" OFF)
 option(USE_SYSTEM_LIBPNG "Use installed version of LibPNG" OFF)
 
-if(USE_SYSTEM_BENCHMARK)
-  find_package(benchmark REQUIRED)
-else()
-  include(External_benchmark)
-endif()
-
 # We don't even try to compile libpng under Windows
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
   find_package(PNG)

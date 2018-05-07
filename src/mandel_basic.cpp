@@ -33,11 +33,7 @@ void mandel_basic(const mpp::MandelbrotPPExporter::Image &image,
       mk *= iter_scale;
       mk = std::sqrt(mk);
       mk *= 255; // monochrome depth (assuming RGBA image)
-      image.buffer[mpp::Map2DTo1D<int32_t>(x, y, image.width)] = mk;
+      image.buffer[mpp::Map2DTo1D<int32_t>(x, y, image.width)] = static_cast<int32_t>(mk);
     }
   }
 }
-
-void (*computeMandelbrot)(const mpp::MandelbrotPPExporter::Image &image,
-                          const mpp::MandelbrotPPExporter::FractalSpec &spec) =
-    &mandel_basic;

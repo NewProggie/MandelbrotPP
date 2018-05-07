@@ -8,6 +8,9 @@
 #include <ostream>
 
 namespace mpp {
+
+enum LogSeverity { FATAL, ERROR, WARNING, INFO };
+
 namespace internal {
 int GetLoggingLevel();
 void SetLoggingLevel(int level);

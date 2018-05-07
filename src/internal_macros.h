@@ -2,7 +2,22 @@
 // Use of this source code is governed by a MIT license that can be found in
 // the LICENSE file.
 
+#ifndef MANDELBROTPP_INTERNAL_MACROS_H
+#define MANDELBROTPP_INTERNAL_MACROS_H
+
 #include <memory>
+
+namespace internal {
+/// The arraysize(arr) macro returns the number of elements in array.
+/// The expression is a compile-time constant, and therefore can be used in
+/// defining new arrays, for example. If you use arraysize on a pointer by
+/// mistake, you will get a compile-time error, since *foo and foo[] are
+/// two different things.
+template <typename T, std::size_t N>
+char (&ArraySizeHelper(T (&array)[N]))[N];
+} // namespace internal
+
+#define arraysize(arr) (sizeof(internal::ArraySizeHelper(arr)))
 
 /// Inside the declaration of a class will make it unassignable
 #define DISALLOW_ASSIGN(TypeName) void operator=(const TypeName&) = delete
@@ -132,3 +147,5 @@
 #else
 #  define ANONYMOUS_VARIABLE(str) CONCATENATE(str, __LINE__)
 #endif
+
+#endif // MANDELBROTPP_INTERNAL_MACROS_H

@@ -38,6 +38,5 @@ option(BUILD_DOCUMENTATION "Build with documentation" OFF)
 include(InstallLocation)
 include(ExternalProject)
 include(Projects)
-enable_testing()
 
 add_subdirectory(src)

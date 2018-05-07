@@ -5,10 +5,12 @@
 #ifndef MANDELBROTPP_TIMING_H
 #define MANDELBROTPP_TIMING_H
 
+#include "mpp_lib_export.h"
 #include <chrono>
 #include <ratio>
 
-class Timer {
+namespace mpp {
+class MPP_LIB_EXPORT Timer {
 public:
   Timer() : beg_(clock_::now()) {}
   void reset() { beg_ = clock_::now(); }
@@ -22,5 +24,7 @@ private:
   using ms_ = std::chrono::duration<double, std::milli>;
   std::chrono::time_point<clock_> beg_;
 };
+
+} // namespace mpp
 
 #endif // MANDELBROTPP_TIMING_H

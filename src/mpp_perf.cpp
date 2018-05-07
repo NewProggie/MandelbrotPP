@@ -2,26 +2,52 @@
 // Use of this source code is governed by a MIT license that can be found in
 // the LICENSE file.
 
+#include "benchmark.h"
 #include "mandelbrotpp/exporter.h"
 #include "timing.h"
 #include <iostream>
+#include <memory>
 
-extern void (*computeMandelbrot)(
-    const mpp::MandelbrotPPExporter::Image &image,
-    const mpp::MandelbrotPPExporter::FractalSpec &spec);
+class MandelbrotFixture : public mpp::Benchmark {
+protected:
+  virtual void SetUp() override {
+    mpp::Benchmark::SetUp();
 
-int main(int argc, char *argv[]) {
+    image = std::make_unique<mpp::MandelbrotPPExporter::Image>(640, 480);
+    spec = mpp::MandelbrotPPExporter::FractalSpec{-2.0f, 2.0f, -2.0f, 2.0f, 30};
+  }
 
-  mpp::MandelbrotPPExporter::Image img(640, 480);
-  mpp::MandelbrotPPExporter::FractalSpec spec = {
-      .xlim = {-2.0f, 2.0f}, .ylim = {-2.0f, 2.0f}, .iterations = 30};
+  std::unique_ptr<mpp::MandelbrotPPExporter::Image> image;
+  mpp::MandelbrotPPExporter::FractalSpec spec;
+};
 
-  Timer t;
-  (*computeMandelbrot)(img, spec);
-  double elapsed = t.elapsed();
-  std::cout << "elapsed: " << elapsed << std::endl;
-  mpp::PPMExporter exporter;
-  exporter.WriteImage(img);
+void mandel_basic(const mpp::MandelbrotPPExporter::Image &image,
+                  const mpp::MandelbrotPPExporter::FractalSpec &spec);
 
-  return 0;
+BENCHMARK_F(MandelbrotFixture, BasicMandelbrot) {
+  while (context.Running()) {
+    mandel_basic(*image, spec);
+  }
 }
+
+#if SSE2_FOUND
+void mandel_sse2(const mpp::MandelbrotPPExporter::Image &image,
+                 const mpp::MandelbrotPPExporter::FractalSpec &spec);
+
+BENCHMARK_F(MandelbrotFixture, SSE2Mandelbrot) {
+  while (context.Running()) {
+    mandel_sse2(*image, spec);
+  }
+}
+#endif
+
+void mandel_avx(const mpp::MandelbrotPPExporter::Image &image,
+                const mpp::MandelbrotPPExporter::FractalSpec &spec);
+
+BENCHMARK_F(MandelbrotFixture, AVXMandelbrot) {
+  while (context.Running()) {
+    mandel_avx(*image, spec);
+  }
+}                
+
+BENCHMARK_MAIN()
